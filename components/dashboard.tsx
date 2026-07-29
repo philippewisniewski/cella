@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import type { Wine, WineStats, WineFilters, SortKey, SortDir } from '@/lib/types'
 import { searchWines, filterWines, sortWines } from '@/lib/wines'
+import Header from './header'
 import WineList from './wineList'
 import WineForm from './wineForm'
 import Aside from './aside'
@@ -112,25 +113,30 @@ export default function Dashboard({ wines: initialWines, stats }: DashboardProps
   
   // === BLOCK 5: RENDER ===
   return (
-    <div className="flex gap-6 p-6">
-      {/* MAIN AREA: list OR form, decided by `mode` */}
-      <main className="flex-1">
-        {mode === 'list' ? (
-          <WineList wines={visibleWines} onSelect={handleSelect} />
-        ) : (
-          <WineForm wine={editingWine} onSave={handleSave} onCancel={handleCancel} />
-        )}
-      </main>
+    <div className="flex flex-col">
+      <Header searchValue={searchText} onSearchChange={setSearchText} />
 
-      {/* ASIDE: always on the side; shows detail or stats */}
-      <Aside
-        selected={selected}
-        stats={stats}
-        onClose={handleClose}
-        onEdit={handleEdit}
-        onDrink={handleDrink}
-        onDelete={handleDelete}
-      />
+      {/* Row below the header: main area + aside */}
+      <div className="flex gap-6 p-6">
+        {/* MAIN AREA: list OR form, decided by `mode` */}
+        <main className="flex-1">
+          {mode === 'list' ? (
+            <WineList wines={visibleWines} onSelect={handleSelect} />
+          ) : (
+            <WineForm wine={editingWine} onSave={handleSave} onCancel={handleCancel} />
+          )}
+        </main>
+
+        {/* ASIDE: always on the side; shows detail or stats */}
+        <Aside
+          selected={selected}
+          stats={stats}
+          onClose={handleClose}
+          onEdit={handleEdit}
+          onDrink={handleDrink}
+          onDelete={handleDelete}
+        />
+      </div>
     </div>
   )
 }
