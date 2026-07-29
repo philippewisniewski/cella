@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import type { Wine, WineType } from '@/lib/types'
 
+// A blank wine object to use when adding a new wine.
 const BLANK: Wine = {
+    // Generate a unique ID for the new wine. If `crypto` is available, use `crypto.randomUUID()`, otherwise fallback to 'new'.
     id: typeof crypto !== 'undefined' ? crypto.randomUUID() : 'new',
     name: '',
     producer: '',
@@ -33,8 +35,10 @@ export default function WineForm({
     onSave: (wine: Wine) => void
     onCancel: () => void
 }) {
-    // If `wine` is provided we're editing; otherwise we're adding a new one.
+    // If `wine` is provided - wine is being edited; otherwise we're adding a new one.
     const [form, setForm] = useState<Wine>(wine ?? BLANK)
+
+    // Helper function to update a specific field in the form state.
     const set = <K extends keyof Wine>(key: K, value: Wine[K]) =>
         setForm((prev) => ({ ...prev, [key]: value }))
 

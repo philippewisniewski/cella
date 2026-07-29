@@ -15,6 +15,7 @@ export default function WineDetail({
     onDrink?: (id: string) => void
     onDelete?: (id: string) => void
 }) {
+    // Helper function to render a field with label and value
     const field = (label: string, value: string) => (
         <div>
             <dt>{label}</dt>
@@ -26,7 +27,7 @@ export default function WineDetail({
         <div>
             <button onClick={() => onClose?.()}>← Back to dashboard</button>
             <h2>{wine.name}</h2>
-
+            
             <dl>
                 {field('Producer', wine.producer)}
                 {field('Type', wine.type)}

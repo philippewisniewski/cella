@@ -1,6 +1,6 @@
 'use client'
 
-import type { Wine } from '../lib/types'
+import type { Wine } from '@/lib/types'
 import WineCard from './wineCard'
 
 /**
