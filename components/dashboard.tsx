@@ -113,36 +113,41 @@ export default function Dashboard({ wines: initialWines, stats }: DashboardProps
   
   // === BLOCK 5: RENDER ===
   return (
-    <div className="flex flex-col">
-      <Header
-        wines={wines}
-        searchValue={searchText}
-        onSearchChange={setSearchText}
-        filters={filters}
-        onFilterChange={setFilters}
-      />
-
-      {/* Row below the header: main area + aside */}
-      <div className="flex gap-6 p-6">
-        {/* MAIN AREA: list OR form, decided by `mode` */}
-        <main className="flex-1">
+    <div className="flex">
+      {/* LEFT COLUMN: header (search + filters) over the list/form */}
+      <div className="flex-1">
+        <Header
+          wines={wines}
+          searchValue={searchText}
+          onSearchChange={setSearchText}
+          filters={filters}
+          onFilterChange={setFilters}
+          onAddWine={handleAddNew}
+          sortKey={sortKey}
+          sortDir={sortDir}
+          onSortChange={(key, dir) => {
+            setSortKey(key)
+            setSortDir(dir)
+          }}
+        />
+        <main className="p-6">
           {mode === 'list' ? (
             <WineList wines={visibleWines} onSelect={handleSelect} />
           ) : (
             <WineForm wine={editingWine} onSave={handleSave} onCancel={handleCancel} />
           )}
         </main>
-
-        {/* ASIDE: always on the side; shows detail or stats */}
-        <Aside
-          selected={selected}
-          stats={stats}
-          onClose={handleClose}
-          onEdit={handleEdit}
-          onDrink={handleDrink}
-          onDelete={handleDelete}
-        />
       </div>
+
+      {/* RIGHT RAIL: full-height aside (stats/detail + logo) */}
+      <Aside
+        selected={selected}
+        stats={stats}
+        onClose={handleClose}
+        onEdit={handleEdit}
+        onDrink={handleDrink}
+        onDelete={handleDelete}
+      />
     </div>
   )
 }
