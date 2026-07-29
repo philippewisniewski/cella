@@ -114,7 +114,13 @@ export default function Dashboard({ wines: initialWines, stats }: DashboardProps
   // === BLOCK 5: RENDER ===
   return (
     <div className="flex flex-col">
-      <Header searchValue={searchText} onSearchChange={setSearchText} />
+      <Header
+        wines={wines}
+        searchValue={searchText}
+        onSearchChange={setSearchText}
+        filters={filters}
+        onFilterChange={setFilters}
+      />
 
       {/* Row below the header: main area + aside */}
       <div className="flex gap-6 p-6">
