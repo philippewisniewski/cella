@@ -1,8 +1,15 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import type { Wine, WineStats, WineFilters, SortKey, SortDir } from '@/lib/types'
-import { searchWines, filterWines, sortWines } from '@/lib/wines'
+import { useEffect, useMemo, useState } from 'react'
+import type { Wine, WineFilters, SortKey, SortDir } from '@/lib/types'
+import {
+  searchWines,
+  filterWines,
+  sortWines,
+  loadWines,
+  saveWines,
+  computeStats,
+} from '@/lib/wines'
 import Header from './header'
 import WineList from './wineList'
 import WineForm from './wineForm'
@@ -10,10 +17,9 @@ import Aside from './aside'
 
 type DashboardProps = {
   wines: Wine[]
-  stats: WineStats
 }
 
-export default function Dashboard({ wines: initialWines, stats }: DashboardProps) {
+export default function Dashboard({ wines: initialWines }: DashboardProps) {
   // === BLOCK 2: STATE ===
   // Local copy of the wine list so the UI can add / edit / delete wines.
   // We copy `initialWines` because props must never be mutated directly.
@@ -27,6 +33,10 @@ export default function Dashboard({ wines: initialWines, stats }: DashboardProps
 
   // The wine currently being edited. `undefined` means "adding a new wine".
   const [editingWine, setEditingWine] = useState<Wine | undefined>(undefined)
+
+  // Whether we've finished loading from localStorage. This guards the persist
+  // effect so it can't overwrite saved data with the seed on first render.
+  const [loaded, setLoaded] = useState(false)
   
   // === BLOCK 3: DERIVED LIST ===
   // Raw control values for the search bar, filter dropdowns and sort.
@@ -43,6 +53,30 @@ export default function Dashboard({ wines: initialWines, stats }: DashboardProps
     const filtered = filterWines(searched, filters)
     return sortWines(filtered, sortKey, sortDir)
   }, [wines, searchText, filters, sortKey, sortDir])
+
+  // === BLOCK 2b: PERSISTENCE ===
+  // On mount, load any saved cellar and switch to it. If nothing is saved yet
+  // we simply keep the seed that came from the server.
+  /* eslint-disable react-hooks/set-state-in-effect -- intentional one-time
+     hydrate from localStorage; done in an effect (not state init) so the first
+     client render matches the server and avoids a hydration mismatch. */
+  useEffect(() => {
+    const stored = loadWines()
+    if (stored) setWines(stored)
+    setLoaded(true)
+  }, [])
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Derive stats live from the current wines, so the aside updates whenever a
+  // wine is added, drunk, or deleted (previously stats came from the server
+  // and went stale).
+  const stats = useMemo(() => computeStats(wines), [wines])
+
+  // Persist the cellar whenever it changes — but only after the initial load,
+  // so we never clobber real saved data with the seed.
+  useEffect(() => {
+    if (loaded) saveWines(wines)
+  }, [wines, loaded])
   
   // === BLOCK 4: HANDLERS ===
  // Click a card in the list → show that wine in the aside.

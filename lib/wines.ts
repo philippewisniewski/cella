@@ -808,12 +808,43 @@ export async function getWineById(id: string): Promise<Wine | null> {
   return SEED.find((w) => w.id === id) ?? null;
 }
 
-// Derives the dashboard summary numbers from a list of wines.
-// Defaults to the whole SEED if no list is passed.
+// ---------------------------------------------------------------------------
+// PERSISTENCE (localStorage)
+// The SEED above is the fallback shown on first load / on the server. Once the
+// app runs in the browser we load/save the user's actual cellar here. Every
+// access is guarded by `typeof window` so this module is safe to import on the
+// server (SSR), where localStorage does not exist.
+// ---------------------------------------------------------------------------
+const STORAGE_KEY = "cella.wines.v1";
+
+// Read the saved cellar. Returns null if nothing is stored yet, or if we're on
+// the server (no localStorage). The caller decides what to do with null.
+export function loadWines(): Wine[] | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as Wine[]) : null;
+  } catch {
+    // Unreadable/corrupt data — fall back to the seed rather than crashing.
+    return null;
+  }
+}
+
+// Write the whole cellar. A no-op on the server.
+export function saveWines(wines: Wine[]): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(wines));
+}
+
+// ---------------------------------------------------------------------------
+// STATS
+// A pure, synchronous calculation shared by the async `getStats` (the server
+// seam) and the client dashboard's useMemo, so both always agree.
 // cellarValue is the total £ tied up in the cellar (price × quantity).
-export async function getStats(wines: Wine[] = SEED): Promise<WineStats> {
+// ---------------------------------------------------------------------------
+export function computeStats(wines: Wine[]): WineStats {
   const totalBottles = wines.reduce((sum, w) => sum + w.quantity, 0);
-  // Sets to count unique countries and regions (eliminates duplicates).
+  // Sets count unique countries/regions (eliminates duplicates).
   const totalCountries = new Set(wines.map((w) => w.country)).size;
   const totalRegions = new Set(wines.map((w) => w.region)).size;
   const cellarValue = wines.reduce((sum, w) => sum + w.price * w.quantity, 0);
@@ -825,6 +856,12 @@ export async function getStats(wines: Wine[] = SEED): Promise<WineStats> {
     cellarValue,
     readyToDrink,
   };
+}
+
+// Async wrapper kept for the server-side data seam (e.g. a future DB/WordPress
+// swap). Defaults to the seed when no list is supplied.
+export async function getStats(wines: Wine[] = SEED): Promise<WineStats> {
+  return computeStats(wines);
 }
 
 // Free-text search across name, producer, region, appellation, country and
