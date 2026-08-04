@@ -1,35 +1,28 @@
 'use client'
 
-import type { Wine, WineFilters, SortKey, SortDir } from '@/lib/types'
+import type { SortKey, SortDir } from '@/lib/types'
 import Search from './search'
-import Filters from './filters'
-import Sort from './sort'
+import ColumnHeader from './columnHeader'
 
 export default function Header({
-    wines,
     searchValue,
     onSearchChange,
-    filters,
-    onFilterChange,
     onAddWine,
     sortKey,
     sortDir,
     onSortChange,
 }: {
-    wines: Wine[]
     searchValue: string
     onSearchChange: (value: string) => void
-    filters: WineFilters
-    onFilterChange: (next: WineFilters) => void
     onAddWine: () => void
     sortKey: SortKey
     sortDir: SortDir
     onSortChange: (key: SortKey, dir: SortDir) => void
 }) {
     return (
-        <header className="sticky top-0 z-10 border-b bg-white p-4">
+        <header className="sticky top-0 z-10 border-b bg-white">
             {/* Top row: search (left) + Add Wine button */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 p-4">
                 <div className="w-64">
                     <Search value={searchValue} onChange={onSearchChange} />
                 </div>
@@ -42,19 +35,12 @@ export default function Header({
                 </button>
             </div>
 
-            {/* Filters row: dropdowns + sort control */}
-            <div className="mt-3 flex flex-wrap items-end gap-4">
-                <Filters
-                    wines={wines}
-                    filters={filters}
-                    onChange={onFilterChange}
-                />
-                <Sort
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    onChange={onSortChange}
-                />
-            </div>
+            {/* Bottom row: the sortable column header (click a column to sort). */}
+            <ColumnHeader
+                sortKey={sortKey}
+                sortDir={sortDir}
+                onSortChange={onSortChange}
+            />
         </header>
     )
 }

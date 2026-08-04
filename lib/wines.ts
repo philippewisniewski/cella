@@ -2,8 +2,8 @@ import type {
   SortDir,
   SortKey,
   Wine,
-  WineFilters,
   WineStats,
+  WineType,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -864,48 +864,46 @@ export async function getStats(wines: Wine[] = SEED): Promise<WineStats> {
   return computeStats(wines);
 }
 
-// Free-text search across name, producer, region, appellation, country and
-// grape variety. Empty query returns the list unchanged.
+// Free-text search across name, producer, region, appellation, country, grape
+// variety, type, year and price. Numeric fields are coerced to strings so a
+// query like "2015" or "850" matches. Empty query returns the list unchanged.
 export function searchWines(wines: Wine[], query: string): Wine[] {
   const q = query.trim().toLowerCase();
   if (!q) return wines;
   return wines.filter((w) =>
-    [w.name, w.producer, w.region, w.appellation, w.country, ...w.grapeVariety]
+    [
+      w.name,
+      w.producer,
+      w.region,
+      w.appellation,
+      w.country,
+      w.type,
+      String(w.year),
+      String(w.price),
+      ...w.grapeVariety,
+    ]
       .join(" ")
       .toLowerCase()
       .includes(q),
   );
 }
 
-// Applies the optional filter bar selections. Any unset filter is ignored,
-// so passing an empty object returns the list unchanged.
-export function filterWines(wines: Wine[], filters: WineFilters): Wine[] {
-  return wines.filter((w) => {
-    // If user selected a country AND wine's country doesn't match, reject it
-    if (filters.country && w.country !== filters.country) return false;
-
-    // If user selected a type AND wine's type doesn't match, reject it
-    if (filters.type && w.type !== filters.type) return false;
-
-    // If user selected an appellation AND wine's appellation doesn't match, reject it
-    if (filters.appellation && w.appellation !== filters.appellation) return false;
-
-    // If user selected a grape AND wine doesn't contain that grape, reject it
-    if (
-      filters.grape &&
-      !w.grapeVariety.some((g) => g.toLowerCase() === filters.grape!.toLowerCase())
-    )
-      // Early return false;
-      return false;
-
-    // If we get here, all checks passed - let this wine through!
-    return true;
-  });
+// Returns a new sorted array (does not mutate the input).
+// Canonical display order for wine types — not alphabetical, but the order a
+// cellar owner expects (still/light → still/rich → rosé → sparkling → sweet → fortified).
+const TYPE_ORDER: Record<WineType, number> = {
+  white: 0,
+  red: 1,
+  rosé: 2,
+  sparkling: 3,
+  dessert: 4,
+  fortified: 5,
 }
 
-// Returns a new sorted array (does not mutate the input).
 // `key` picks the field; `dir` defaults to "desc" (highest first).
-// Strings (name) use localeCompare; numbers compare directly.
+// Strings use localeCompare; numbers compare directly; the boolean
+// `readyToDrink` sorts false (0) before true (1); `type` uses TYPE_ORDER so
+// the categories sort in a meaningful cellar order rather than alphabetically.
 export function sortWines(
   wines: Wine[],
   key: SortKey,
@@ -918,17 +916,22 @@ export function sortWines(
   // Create a copy of the array to avoid mutating the original
   // This is a best practice - we don't want to change the input array
   return [...wines].sort((a, b) => {
-    // Special handling for string properties (like "name")
-    if (key === "name") {
-      // localeCompare() compares two strings and returns:
-      // - Negative if a comes before b
-      // - Positive if a comes after b
-      // - Zero if they're equal
-      return factor * a.name.localeCompare(b.name);
+    // Wine type: sort by its canonical category order, not alphabetically.
+    if (key === "type") {
+      return factor * (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]);
     }
 
-    // For numeric properties (like "year", "price", "score")
-    // Simple subtraction: a - b gives us the comparison result
-    return factor * (a[key] - b[key]);
+    // String fields: localeCompare handles locale-aware ordering.
+    if (typeof a[key] === "string" && typeof b[key] === "string") {
+      return factor * (a[key] as string).localeCompare(b[key] as string);
+    }
+
+    // Boolean field (readyToDrink): coerce to 0/1.
+    if (typeof a[key] === "boolean" && typeof b[key] === "boolean") {
+      return factor * ((a[key] ? 1 : 0) - (b[key] ? 1 : 0));
+    }
+
+    // Numeric fields (year, score, price, quantity): simple subtraction.
+    return factor * ((a[key] as number) - (b[key] as number));
   });
 }

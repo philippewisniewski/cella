@@ -36,13 +36,14 @@ export interface WineStats {
   readyToDrink: number;
 }
 
-export type SortKey = "score" | "name" | "year" | "price" | "quantity";
+export type SortKey =
+  | "name"
+  | "producer"
+  | "type"
+  | "country"
+  | "year"
+  | "score"
+  | "readyToDrink"
+  | "price"
+  | "quantity";
 export type SortDir = "asc" | "desc";
-
-export interface WineFilters {
-  search?: string;
-  country?: string;
-  grape?: string;
-  type?: WineType;
-  appellation?: string;
-}

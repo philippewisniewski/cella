@@ -1,10 +1,9 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import type { Wine, WineFilters, SortKey, SortDir } from '@/lib/types'
+import type { Wine, SortKey, SortDir } from '@/lib/types'
 import {
   searchWines,
-  filterWines,
   sortWines,
   loadWines,
   saveWines,
@@ -38,20 +37,18 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   const [loaded, setLoaded] = useState(false)
   
   // === BLOCK 3: DERIVED LIST ===
-  // Raw control values for the search bar, filter dropdowns and sort.
+  // Raw control values for the search bar and sort.
   const [searchText, setSearchText] = useState('')
-  const [filters, setFilters] = useState<WineFilters>({})
   const [sortKey, setSortKey] = useState<SortKey>('score')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
-  // The list actually shown: start from all wines, then search → filter → sort.
+  // The list actually shown: start from all wines, then search → sort.
   // `useMemo` means this only recomputes when one of the inputs changes,
   // not on every single render.
   const visibleWines = useMemo(() => {
     const searched = searchWines(wines, searchText)
-    const filtered = filterWines(searched, filters)
-    return sortWines(filtered, sortKey, sortDir)
-  }, [wines, searchText, filters, sortKey, sortDir])
+    return sortWines(searched, sortKey, sortDir)
+  }, [wines, searchText, sortKey, sortDir])
 
   // === BLOCK 2b: PERSISTENCE ===
   // On mount, load any saved cellar and switch to it. If nothing is saved yet
@@ -141,15 +138,13 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   // === BLOCK 5: RENDER ===
   return (
     <div className="flex min-h-screen flex-col">
-      {/* MAIN COLUMN: header (search + filters) over the inventory list/form.
-          The list now owns the full width; the detail view is a slide-in flyout. */}
+      {/* MAIN COLUMN: header (search + sortable column header) over the
+          inventory list/form. The list owns the full width; the detail view
+          is a slide-in flyout. */}
       <div className="flex-1">
         <Header
-          wines={wines}
           searchValue={searchText}
           onSearchChange={setSearchText}
-          filters={filters}
-          onFilterChange={setFilters}
           onAddWine={handleAddNew}
           sortKey={sortKey}
           sortDir={sortDir}
@@ -158,7 +153,7 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
             setSortDir(dir)
           }}
         />
-        <main className="p-6">
+        <main className="py-6">
           {mode === 'list' ? (
             <WineList wines={visibleWines} onSelect={handleSelect} />
           ) : (
