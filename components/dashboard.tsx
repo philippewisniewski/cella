@@ -8,7 +8,6 @@ import {
   sortWines,
   loadWines,
   saveWines,
-  computeStats,
 } from '@/lib/wines'
 import Header from './header'
 import WineList from './wineList'
@@ -25,7 +24,7 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   // We copy `initialWines` because props must never be mutated directly.
   const [wines, setWines] = useState<Wine[]>(initialWines)
 
-  // The wine shown in the aside. `null` means "show the stats panel instead".
+  // The wine shown in the detail flyout. `null` means the flyout is closed.
   const [selected, setSelected] = useState<Wine | null>(null)
 
   // What the main area displays: the list, the add form, or the edit form.
@@ -67,11 +66,6 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   }, [])
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // Derive stats live from the current wines, so the aside updates whenever a
-  // wine is added, drunk, or deleted (previously stats came from the server
-  // and went stale).
-  const stats = useMemo(() => computeStats(wines), [wines])
-
   // Persist the cellar whenever it changes — but only after the initial load,
   // so we never clobber real saved data with the seed.
   useEffect(() => {
@@ -104,8 +98,7 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
     setEditingWine(undefined)
   }
 
-  // "Back to dashboard" on the detail view → clear the aside selection
-  // (so the stats panel shows again).
+  // "Close" on the detail flyout → clear the selection (slides the flyout out).
   const handleClose = () => setSelected(null)
 
   // Save from the form → add a new wine or replace an existing one by id,
@@ -147,8 +140,9 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   
   // === BLOCK 5: RENDER ===
   return (
-    <div className="flex">
-      {/* LEFT COLUMN: header (search + filters) over the list/form */}
+    <div className="flex min-h-screen flex-col">
+      {/* MAIN COLUMN: header (search + filters) over the inventory list/form.
+          The list now owns the full width; the detail view is a slide-in flyout. */}
       <div className="flex-1">
         <Header
           wines={wines}
@@ -173,10 +167,9 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
         </main>
       </div>
 
-      {/* RIGHT RAIL: full-height aside (stats/detail + logo) */}
+      {/* DETAIL FLYOUT: slides in from the right when a wine is selected. */}
       <Aside
         selected={selected}
-        stats={stats}
         onClose={handleClose}
         onEdit={handleEdit}
         onDrink={handleDrink}

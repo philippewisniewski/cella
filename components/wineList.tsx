@@ -5,49 +5,48 @@ import WineCard from './wineCard'
 
 /**
  * WineList Component
- * 
- * A component that displays a list of wines as clickable cards.
- * It receives wine data and a selection handler from its parent component.
+ *
+ * Renders the cellar as a horizontal inventory table: a column-header row
+ * followed by one clickable WineCard row per wine. Clicking a row opens
+ * the detail flyout (handled by the parent via `onSelect`).
  */
 export default function WineList({
     /**
      * wines: Array of Wine objects to display
-     * 
-     * This prop contains the complete list of wine data that will be rendered
-     * as individual wine cards. Each wine object should include properties like
-     * id, name, vintage, region, etc. as defined in the Wine type.
      */
     wines,
     /**
-     * onSelect: Callback function for handling wine selection
-     * 
-     * This prop is a function that gets called when a user clicks on a wine card.
-     * It receives the selected Wine object as an argument, allowing the parent
-     * component to handle the selection logic (e.g., updating state, opening details,
-     * or performing other actions based on the selected wine).
+     * onSelect: Callback fired when a wine row is clicked, opening its detail.
      */
     onSelect,
 }: {
     wines: Wine[]
     onSelect: (wine: Wine) => void
 }) {
-
     return (
         <div>
-            {/* 
-                Map over the wines array to create individual wine cards
-                Each wine is rendered as a clickable container with its own WineCard component
-            */}
+            {/* Column header — widths mirror WineCard so the rows line up.
+                (Kept non-sticky for now to avoid overlapping the sticky page
+                Header; revisit when the header is redesigned.) */}
+            <div className="flex items-center gap-4 border-b border-t bg-gray-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <span className="flex-1 min-w-0 font-medium">Name</span>
+                <span className="w-40 truncate text-sm text-gray-500">Producer</span>
+                <span className="w-20">Type</span>
+                <span className="w-28">Country</span>
+                <span className="w-16">Year</span>
+                <span className="w-16">Score</span>
+                <span className="w-16">Ready</span>
+                <span className="w-20">Price</span>
+                <span className="w-12">Qty</span>
+            </div>
+
+            {/* One clickable row per wine. */}
             {wines.map((wine) => (
                 <div
-                    key={wine.id}  // React requires unique keys for list items
-                    onClick={() => onSelect(wine)}  // Call the selection handler when clicked
-                    className="cursor-pointer"  // Visual feedback that this is clickable
+                    key={wine.id}
+                    onClick={() => onSelect(wine)}
+                    className="cursor-pointer"
                 >
-                    {/* 
-                        Render the individual WineCard component with the wine data
-                        The WineCard component is responsible for displaying the wine's details
-                    */}
                     <WineCard wine={wine} />
                 </div>
             ))}

@@ -25,7 +25,7 @@ export default function WineDetail({
 
     return (
         <div>
-            <button onClick={() => onClose?.()}>← Back to dashboard</button>
+            <button onClick={() => onClose?.()}>✕ Close</button>
             <h2>{wine.name}</h2>
             
             <dl>
