@@ -10,7 +10,6 @@ import {
 } from '@/lib/wines'
 import Header from './header'
 import WineList from './wineList'
-import WineForm from './wineForm'
 import Aside from './aside'
 
 type DashboardProps = {
@@ -25,12 +24,6 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
 
   // The wine shown in the detail flyout. `null` means the flyout is closed.
   const [selected, setSelected] = useState<Wine | null>(null)
-
-  // What the main area displays: the list, the add form, or the edit form.
-  const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list')
-
-  // The wine currently being edited. `undefined` means "adding a new wine".
-  const [editingWine, setEditingWine] = useState<Wine | undefined>(undefined)
 
   // Whether we've finished loading from localStorage. This guards the persist
   // effect so it can't overwrite saved data with the seed on first render.
@@ -73,44 +66,8 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
  // Click a card in the list → show that wine in the aside.
   const handleSelect = (wine: Wine) => setSelected(wine)
 
-  // "+ Add Wine" button → open the form in add mode (no wine to edit).
-  const handleAddNew = () => {
-    setEditingWine(undefined)
-    setMode('add')
-  }
-
-  // "Edit Wine" in the detail view → open the form prefilled with the
-  // selected wine. (WineDetail's onEdit gives us no argument, so we read
-  // `selected` from state.)
-  const handleEdit = () => {
-    if (selected) {
-      setEditingWine(selected)
-      setMode('edit')
-    }
-  }
-
-  // Cancel the form → go back to the list.
-  const handleCancel = () => {
-    setMode('list')
-    setEditingWine(undefined)
-  }
-
   // "Close" on the detail flyout → clear the selection (slides the flyout out).
   const handleClose = () => setSelected(null)
-
-  // Save from the form → add a new wine or replace an existing one by id,
-  // then return to the list and show the saved wine in the aside.
-  const handleSave = (wine: Wine) => {
-    setWines((prev) => {
-      const exists = prev.some((w) => w.id === wine.id)
-      return exists
-        ? prev.map((w) => (w.id === wine.id ? wine : w))
-        : [...prev, wine]
-    })
-    setEditingWine(undefined)
-    setMode('list')
-    setSelected(wine)
-  }
 
   // "Drink (-1)" → reduce quantity by one; if it was the last bottle,
   // remove the wine from the cellar entirely.
@@ -139,13 +96,12 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   return (
     <div className="flex min-h-screen flex-col">
       {/* MAIN COLUMN: header (search + sortable column header) over the
-          inventory list/form. The list owns the full width; the detail view
-          is a slide-in flyout. */}
+          inventory list. The list owns the full width; the detail view
+          is a slide-in flyout. Add/Edit are separate full-page routes. */}
       <div className="flex-1">
         <Header
           searchValue={searchText}
           onSearchChange={setSearchText}
-          onAddWine={handleAddNew}
           sortKey={sortKey}
           sortDir={sortDir}
           onSortChange={(key, dir) => {
@@ -154,11 +110,7 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
           }}
         />
         <main className="py-6">
-          {mode === 'list' ? (
-            <WineList wines={visibleWines} onSelect={handleSelect} />
-          ) : (
-            <WineForm wine={editingWine} onSave={handleSave} onCancel={handleCancel} />
-          )}
+          <WineList wines={visibleWines} onSelect={handleSelect} />
         </main>
       </div>
 
@@ -166,7 +118,6 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
       <Aside
         selected={selected}
         onClose={handleClose}
-        onEdit={handleEdit}
         onDrink={handleDrink}
         onDelete={handleDelete}
       />

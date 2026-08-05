@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import type { SortKey, SortDir } from '@/lib/types'
 import Search from './search'
 import ColumnHeader from './columnHeader'
@@ -7,14 +8,12 @@ import ColumnHeader from './columnHeader'
 export default function Header({
     searchValue,
     onSearchChange,
-    onAddWine,
     sortKey,
     sortDir,
     onSortChange,
 }: {
     searchValue: string
     onSearchChange: (value: string) => void
-    onAddWine: () => void
     sortKey: SortKey
     sortDir: SortDir
     onSortChange: (key: SortKey, dir: SortDir) => void
@@ -26,13 +25,12 @@ export default function Header({
                 <div className="w-64">
                     <Search value={searchValue} onChange={onSearchChange} />
                 </div>
-                <button
-                    type="button"
-                    onClick={onAddWine}
+                <Link
+                    href="/add"
                     className="rounded-md bg-blue-600 px-4 py-2 text-white"
                 >
                     + Add Wine
-                </button>
+                </Link>
             </div>
 
             {/* Bottom row: the sortable column header (click a column to sort). */}

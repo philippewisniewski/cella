@@ -16,13 +16,11 @@ import WineDetail from './wineDetail'
 export default function Aside({
     selected,
     onClose,
-    onEdit,
     onDrink,
     onDelete,
 }: {
     selected: Wine | null
     onClose?: () => void
-    onEdit?: () => void
     onDrink?: (id: string) => void
     onDelete?: (id: string) => void
 }) {
@@ -58,7 +56,6 @@ export default function Aside({
                     <WineDetail
                         wine={shown}
                         onClose={onClose}
-                        onEdit={onEdit}
                         onDrink={onDrink}
                         onDelete={onDelete}
                     />

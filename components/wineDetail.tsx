@@ -1,17 +1,16 @@
 'use client'
 
+import Link from 'next/link'
 import type { Wine } from '@/lib/types'
 
 export default function WineDetail({
     wine,
     onClose,
-    onEdit,
     onDrink,
     onDelete,
 }: {
     wine: Wine
     onClose?: () => void
-    onEdit?: () => void
     onDrink?: (id: string) => void
     onDelete?: (id: string) => void
 }) {
@@ -49,7 +48,12 @@ export default function WineDetail({
             </dl>
 
             <div>
-                <button onClick={() => onEdit?.()}>Edit Wine</button>
+                <Link
+                    href={`/edit/${wine.id}`}
+                    className="inline-block rounded-md border px-3 py-1"
+                >
+                    Edit Wine
+                </Link>
                 <button onClick={() => onDrink?.(wine.id)}>Drink (-1)</button>
                 <button
                     onClick={() => {
