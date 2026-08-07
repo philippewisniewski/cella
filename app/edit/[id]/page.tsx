@@ -1,25 +1,26 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import WineForm from '@/components/wineForm'
 import { loadWines, saveWines, getWineById } from '@/lib/wines'
 import type { Wine } from '@/lib/types'
 
-export default function EditWinePage({ params }: { params: { id: string } }) {
+export default function EditWinePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
+  const { id } = use(params)
 
   // Synchronous lookup against the user's saved cellar (no effect needed).
   const saved = loadWines()
-  const found = saved?.find((w) => w.id === params.id) ?? null
+  const found = saved?.find((w) => w.id === id) ?? null
 
   // If not in the saved cellar, fall back to the seed (async) via state.
   const [seedWine, setSeedWine] = useState<Wine | null>(null)
   useEffect(() => {
     if (!found) {
-      getWineById(params.id).then(setSeedWine)
+      getWineById(id).then(setSeedWine)
     }
-  }, [found, params.id])
+  }, [found, id])
 
   const wine = found ?? seedWine
 
