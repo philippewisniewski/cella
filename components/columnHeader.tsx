@@ -7,12 +7,12 @@ import type { SortKey, SortDir } from '@/lib/types'
 // column sorts by; `label` is what's displayed.
 const COLUMNS: { key: SortKey; label: string; className: string }[] = [
   { key: 'name', label: 'Name', className: 'flex-1 min-w-0 font-medium' },
-  { key: 'producer', label: 'Producer', className: 'w-40 truncate text-sm text-gray-500' },
-  { key: 'type', label: 'Type', className: 'w-20' },
+  { key: 'producer', label: 'Producer', className: 'w-40 truncate text-sm text-muted' },
+  { key: 'type', label: 'Type', className: 'w-24' },
   { key: 'country', label: 'Country', className: 'w-28' },
   { key: 'year', label: 'Year', className: 'w-16' },
   { key: 'score', label: 'Score', className: 'w-16' },
-  { key: 'readyToDrink', label: 'Ready', className: 'w-16' },
+  { key: 'readyToDrink', label: 'Ready', className: 'w-40' },
   { key: 'price', label: 'Price', className: 'w-20' },
   { key: 'quantity', label: 'Qty', className: 'w-12' },
 ]
@@ -37,7 +37,7 @@ export default function ColumnHeader({
   }
 
   return (
-    <div className="flex items-center gap-4 border-t bg-gray-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <div className="flex items-center gap-4 border-t border-border bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
       {COLUMNS.map((col) => {
         const active = col.key === sortKey
         return (
@@ -45,8 +45,8 @@ export default function ColumnHeader({
             key={col.key}
             type="button"
             onClick={() => handleClick(col.key)}
-            className={`flex items-center gap-1 p-0 text-left hover:text-gray-900 ${
-              active ? 'text-gray-900' : ''
+            className={`flex items-center gap-1 p-0 text-left hover:text-primary ${
+              active ? 'text-primary' : ''
             } ${col.className}`}
           >
             <span className="truncate">{col.label}</span>

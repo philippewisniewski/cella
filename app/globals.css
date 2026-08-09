@@ -1,26 +1,46 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Typography — from the Paper design (Cinzel display + Outfit UI) */
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cinzel), Georgia, serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Surfaces & text */
+  --color-canvas: #f7f5f0;
+  --color-surface: #ffffff;
+  --color-input: #eae8e5;
+  --color-ink: #171717;
+  --color-muted: #17171799;
+  --color-border: #e7e5e4;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Actions */
+  --color-primary: #3b132b;
+  --color-primary-hover: #5b1f3c;
+  --color-primary-active: #2d0e21;
+  --color-secondary: #ebe7df;
+  --color-secondary-hover: #dfdad0;
+  --color-secondary-active: #cec8ba;
+
+  /* Wine type badges */
+  --color-type-red-bg: #f3e8ee;        --color-type-red-fg: #581327;
+  --color-type-white-bg: #ecfccb;      --color-type-white-fg: #3f6212;
+  --color-type-rose-bg: #ffedd5;       --color-type-rose-fg: #9a3412;
+  --color-type-sparkling-bg: #e0f2fe;  --color-type-sparkling-fg: #075985;
+  --color-type-fortified-bg: #f3e8ff;  --color-type-fortified-fg: #581c87;
+  --color-type-dessert-bg: #fef3c7;    --color-type-dessert-fg: #78350f;
+
+  /* Ready-to-drink states */
+  --color-ready-bg: #dcfce7;   --color-ready-fg: #166534;
+  --color-notready-bg: #fee2e2;--color-notready-fg: #991b1b;
+
+  /* Type scale (design: 12 / 14 / 16px) */
+  --text-xs: 0.75rem;  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem; --text-sm--line-height: 1.125rem;
+  --text-base: 1rem;   --text-base--line-height: 1.25rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }

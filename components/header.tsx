@@ -19,15 +19,15 @@ export default function Header({
     onSortChange: (key: SortKey, dir: SortDir) => void
 }) {
     return (
-        <header className="sticky top-0 z-10 border-b bg-white">
+        <header className="sticky top-0 z-10 bg-canvas">
             {/* Top row: search (left) + Add Wine button */}
-            <div className="flex items-center gap-3 p-4">
-                <div className="w-64">
+            <div className="flex items-center justify-between gap-4 p-4">
+                <div className="w-[324px]">
                     <Search value={searchValue} onChange={onSearchChange} />
                 </div>
                 <Link
                     href="/add"
-                    className="rounded-md bg-blue-600 px-4 py-2 text-white"
+                    className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover"
                 >
                     + Add Wine
                 </Link>

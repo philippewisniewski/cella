@@ -16,7 +16,7 @@ export default function AddWinePage() {
   }
 
   return (
-    <main className="min-h-screen py-6">
+    <main className="min-h-screen bg-canvas p-4">
       <WineForm wine={undefined} onSave={handleSave} onCancel={() => router.push('/')} />
     </main>
   )

@@ -3,7 +3,7 @@ import type { WineStats } from "@/lib/types";
 export default function WineStats({ stats }: {stats: WineStats}) {
     return (
         <div>
-            <h2>Wine Cellar Stats</h2>
+            <h2 className="font-display text-base">Wine Cellar Stats</h2>
             <ul>
                 <li>Total Bottles: {stats.totalBottles}</li>
                 <li>Total Countries: {stats.totalCountries}</li>

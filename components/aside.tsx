@@ -16,12 +16,10 @@ import WineDetail from './wineDetail'
 export default function Aside({
     selected,
     onClose,
-    onDrink,
     onDelete,
 }: {
     selected: Wine | null
     onClose?: () => void
-    onDrink?: (id: string) => void
     onDelete?: (id: string) => void
 }) {
     const [shown, setShown] = useState<Wine | null>(selected)
@@ -41,14 +39,14 @@ export default function Aside({
             <div
                 onClick={onClose}
                 aria-hidden={!open}
-                className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 ${
+                className={`fixed inset-0 z-40 bg-ink/30 transition-opacity duration-300 ${
                     open ? 'opacity-100' : 'pointer-events-none opacity-0'
                 }`}
             />
 
             {/* The sliding panel. */}
             <aside
-                className={`fixed top-0 right-0 z-50 h-screen w-96 max-w-[90vw] overflow-y-auto border-l bg-white shadow-xl transition-transform duration-300 ${
+                className={`fixed top-0 right-0 z-50 h-screen w-96 max-w-[90vw] overflow-y-auto border-l border-border bg-canvas shadow-xl transition-transform duration-300 ${
                     open ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
@@ -56,7 +54,6 @@ export default function Aside({
                     <WineDetail
                         wine={shown}
                         onClose={onClose}
-                        onDrink={onDrink}
                         onDelete={onDelete}
                     />
                 )}

@@ -6,61 +6,68 @@ import type { Wine } from '@/lib/types'
 export default function WineDetail({
     wine,
     onClose,
-    onDrink,
     onDelete,
 }: {
     wine: Wine
     onClose?: () => void
-    onDrink?: (id: string) => void
     onDelete?: (id: string) => void
 }) {
-    // Helper function to render a field with label and value
-    const field = (label: string, value: string) => (
-        <div>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
+    // A single stat row: label (left, muted) + value (right, wraps).
+    const stat = (label: string, value: string) => (
+        <div className="flex items-start justify-between gap-4">
+            <dt className="text-sm text-muted">{label}</dt>
+            <dd className="text-sm text-muted text-right">{value}</dd>
+        </div>
+    )
+
+    // A labelled prose block (Description / Tasting Notes) per the design:
+    // Cinzel heading + muted body, 8px gap.
+    const prose = (label: string, value: string) => (
+        <div className="flex flex-col gap-2">
+            <p className="font-display text-base font-semibold">{label}</p>
+            <p className="text-sm text-muted">{value}</p>
         </div>
     )
 
     return (
-        <div>
+        <div className="flex flex-col justify-between gap-8 p-4">
             <button onClick={() => onClose?.()}>✕ Close</button>
-            <h2>{wine.name}</h2>
-            
-            <dl>
-                {field('Producer', wine.producer)}
-                {field('Type', wine.type)}
-                {field('Grape Variety', wine.grapeVariety.join(', '))}
-                {field('Year', String(wine.year))}
-                {field('Quantity', String(wine.quantity))}
-                {field('Appellation', wine.appellation)}
-                {field('Price', `£${wine.price}`)}
-                {field('Alcoholic Strength', `${wine.alcoholicStrength}%`)}
-                {field('Bottle Volume', `${wine.bottleVolume} ml`)}
-                {field('Contains Sulphites', wine.containsSulphites ? 'Yes' : 'No')}
-                {field('Country', wine.country)}
-                {field('Region', wine.region)}
-                {wine.address ? field('Address', wine.address) : null}
-                {field('Score', String(wine.score))}
-                {field('Ready to Drink', wine.readyToDrink ? 'Yes' : 'No')}
-                {wine.description ? field('Description', wine.description) : null}
-                {wine.tastingNotes ? field('Tasting Notes', wine.tastingNotes) : null}
+            <h2 className="font-display text-base font-semibold">{wine.name}</h2>
+
+            <dl className="flex flex-col gap-4">
+                {stat('Producer', wine.producer)}
+                {stat('Type', wine.type)}
+                {stat('Grape Variety', wine.grapeVariety.join(', '))}
+                {stat('Year', String(wine.year))}
+                {stat('Quantity', String(wine.quantity))}
+                {stat('Appellation', wine.appellation)}
+                {stat('Price', `£${wine.price}`)}
+                {stat('Alcoholic Strength', `${wine.alcoholicStrength}%`)}
+                {stat('Bottle Volume', `${wine.bottleVolume} ml`)}
+                {stat('Contains Sulphites', wine.containsSulphites ? 'Yes' : 'No')}
+                {stat('Country', wine.country)}
+                {stat('Region', wine.region)}
+                {wine.address ? stat('Address', wine.address) : null}
+                {stat('Score', String(wine.score))}
+                {stat('Ready to Drink', wine.readyToDrink ? 'Yes' : 'No')}
+                {wine.description ? prose('Description', wine.description) : null}
+                {wine.tastingNotes ? prose('Tasting Notes', wine.tastingNotes) : null}
             </dl>
 
-            <div>
+            <div className="flex items-center gap-4">
                 <Link
                     href={`/edit/${wine.id}`}
-                    className="inline-block rounded-md border px-3 py-1"
+                    className="cursor-pointer rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover"
                 >
                     Edit Wine
                 </Link>
-                <button onClick={() => onDrink?.(wine.id)}>Drink (-1)</button>
                 <button
                     onClick={() => {
                         if (confirm('Remove this wine from your cellar? This cannot be undone.')) {
                             onDelete?.(wine.id)
                         }
                     }}
+                    className="cursor-pointer rounded-md bg-secondary px-4 py-2 text-ink hover:bg-secondary-hover"
                 >
                     Delete
                 </button>

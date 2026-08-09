@@ -69,23 +69,6 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   // "Close" on the detail flyout → clear the selection (slides the flyout out).
   const handleClose = () => setSelected(null)
 
-  // "Drink (-1)" → reduce quantity by one; if it was the last bottle,
-  // remove the wine from the cellar entirely.
-  const handleDrink = (id: string) => {
-    setWines((prev) =>
-      prev.flatMap((w) => {
-        if (w.id !== id) return [w]
-        if (w.quantity <= 1) return [] // last bottle → drop the wine
-        return [{ ...w, quantity: w.quantity - 1 }]
-      }),
-    )
-    setSelected((curr) => {
-      if (!curr || curr.id !== id) return curr
-      if (curr.quantity <= 1) return null
-      return { ...curr, quantity: curr.quantity - 1 }
-    })
-  }
-
   // "Delete" → remove the wine and clear the aside if it was selected.
   const handleDelete = (id: string) => {
     setWines((prev) => prev.filter((w) => w.id !== id))
@@ -118,7 +101,6 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
       <Aside
         selected={selected}
         onClose={handleClose}
-        onDrink={handleDrink}
         onDelete={handleDelete}
       />
     </div>
