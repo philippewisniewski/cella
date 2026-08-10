@@ -22,7 +22,7 @@ export default function Header({
         <header className="sticky top-0 z-10 border-b border-border bg-canvas">
             {/* Top row: search (left) + Add Wine button */}
             <div className="flex items-center justify-between gap-4 p-4">
-                <div className="w-[324px]">
+                <div className="flex-1 min-w-0">
                     <Search value={searchValue} onChange={onSearchChange} />
                 </div>
                 <Link

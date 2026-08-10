@@ -94,16 +94,16 @@ export default function WineForm({
     )
 
     return (
-        <div className="flex gap-8 p-4">
-            <div className="flex-1">
+        <div className="flex flex-col gap-8 p-4 md:flex-row md:gap-8">
+            <div className="md:flex-1">
                 <h2 className="font-display text-2xl font-semibold leading-[30px]">
                     {wine ? 'Edit Wine' : 'Add Wine'}
                 </h2>
             </div>
 
-            <div className="flex flex-1 flex-col gap-8">
+            <div className="flex flex-col gap-8 md:flex-1">
                 {/* Row 1 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Wine Name',
                         <input
@@ -123,7 +123,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 2 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Type',
                         <select
@@ -152,7 +152,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 3 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Year',
                         <input
@@ -174,7 +174,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 4 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Appellation',
                         <input
@@ -195,7 +195,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 5 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Alcoholic Strength',
                         <input
@@ -219,7 +219,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 6 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Country',
                         <input
@@ -239,7 +239,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 7 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Score (Out of 100)',
                         <input
@@ -262,7 +262,7 @@ export default function WineForm({
                 </div>
 
                 {/* Row 8 */}
-                <div className="flex gap-5">
+                <div className="flex flex-col gap-5 md:flex-row md:gap-5">
                     {field(
                         'Address',
                         <input

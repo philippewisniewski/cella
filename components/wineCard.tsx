@@ -1,21 +1,9 @@
-import type { Wine, WineType } from '@/lib/types'
-
-// Map each wine type to its Data Badge colors (from the Paper Data Badges artboard).
-const TYPE_BADGE: Record<WineType, string> = {
-    red: 'bg-type-red-bg text-type-red-fg',
-    white: 'bg-type-white-bg text-type-white-fg',
-    rosé: 'bg-type-rose-bg text-type-rose-fg',
-    sparkling: 'bg-type-sparkling-bg text-type-sparkling-fg',
-    fortified: 'bg-type-fortified-bg text-type-fortified-fg',
-    dessert: 'bg-type-dessert-bg text-type-dessert-fg',
-}
-
-// Shared badge styling: 12px uppercase, 8px/4px padding (matches the design).
-const BADGE = 'inline-flex items-center px-2 py-1 text-xs uppercase'
+import type { Wine } from '@/lib/types'
+import { TYPE_BADGE, BADGE } from './badges'
 
 export default function WineCard({ wine }: { wine: Wine }) {
     return (
-        <div className="flex items-center gap-8 px-4 py-2 border-b border-border hover:bg-ink/5">
+        <div className="flex items-center gap-4 px-4 py-2 border-b border-border hover:bg-ink/5">
             <span className="flex-1 min-w-0 font-display font-semibold text-base truncate">
                 {wine.name}
             </span>

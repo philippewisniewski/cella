@@ -33,7 +33,7 @@ export default function Dashboard({ wines: initialWines }: DashboardProps) {
   // Raw control values for the search bar and sort.
   const [searchText, setSearchText] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('name')
-  const [sortDir, setSortDir] = useState<SortDir>('desc')
+  const [sortDir, setSortDir] = useState<SortDir>('asc')
 
   // The list actually shown: start from all wines, then search → sort.
   // `useMemo` means this only recomputes when one of the inputs changes,

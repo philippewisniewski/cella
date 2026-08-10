@@ -2,6 +2,8 @@
 
 import type { Wine } from '@/lib/types'
 import WineCard from './wineCard'
+import { WineCardResponsive } from './wineCardResponsive'
+import { WineCardTablet } from './wineCardTablet'
 
 /**
  * WineList Component
@@ -26,14 +28,25 @@ export default function WineList({
 }) {
     return (
         <div>
-            {/* One clickable row per wine. */}
+            {/* One clickable row per wine. Three responsive tiers:
+                - >= lg (1024px): horizontal table row
+                - sm..lg (640-1023px): tablet layout (name row + wrapping data)
+                - < sm (639px): fully-stacked card */}
             {wines.map((wine) => (
                 <div
                     key={wine.id}
                     onClick={() => onSelect(wine)}
                     className="cursor-pointer"
                 >
-                    <WineCard wine={wine} />
+                    <div className="hidden lg:block">
+                        <WineCard wine={wine} />
+                    </div>
+                    <div className="hidden sm:block lg:hidden">
+                        <WineCardTablet wine={wine} />
+                    </div>
+                    <div className="sm:hidden">
+                        <WineCardResponsive wine={wine} />
+                    </div>
                 </div>
             ))}
         </div>

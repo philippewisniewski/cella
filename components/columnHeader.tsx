@@ -37,7 +37,7 @@ export default function ColumnHeader({
   }
 
   return (
-        <div className="flex items-center gap-8 bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
+        <div className="hidden lg:flex items-center gap-4 bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
       {COLUMNS.map((col) => {
         const active = col.key === sortKey
         return (
