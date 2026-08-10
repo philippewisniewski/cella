@@ -15,7 +15,7 @@ const BADGE = 'inline-flex items-center px-2 py-1 text-xs uppercase'
 
 export default function WineCard({ wine }: { wine: Wine }) {
     return (
-        <div className="flex items-center gap-4 px-4 py-2 border-b border-border hover:bg-ink/5">
+        <div className="flex items-center gap-8 px-4 py-2 border-b border-border hover:bg-ink/5">
             <span className="flex-1 min-w-0 font-display font-semibold text-base truncate">
                 {wine.name}
             </span>
@@ -43,7 +43,7 @@ export default function WineCard({ wine }: { wine: Wine }) {
                 </span>
             </span>
 
-            <span className="w-20 text-sm text-muted">£{wine.price}</span>
+            <span className="w-20 text-sm text-muted">£{wine.price.toFixed(2)}</span>
             <span className="w-12 text-sm text-muted">{wine.quantity}</span>
         </div>
     )

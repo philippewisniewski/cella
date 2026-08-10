@@ -31,7 +31,12 @@ export default function WineDetail({
 
     return (
         <div className="flex flex-col justify-between gap-8 p-4">
-            <button onClick={() => onClose?.()}>✕ Close</button>
+            <button
+                onClick={() => onClose?.()}
+                className="cursor-pointer self-start bg-secondary px-4 py-[7px] text-xs text-ink hover:bg-secondary-hover active:bg-secondary-active"
+            >
+                ✕ Close
+            </button>
             <h2 className="font-display text-base font-semibold">{wine.name}</h2>
 
             <dl className="flex flex-col gap-4">
@@ -41,7 +46,7 @@ export default function WineDetail({
                 {stat('Year', String(wine.year))}
                 {stat('Quantity', String(wine.quantity))}
                 {stat('Appellation', wine.appellation)}
-                {stat('Price', `£${wine.price}`)}
+                {stat('Price', `£${wine.price.toFixed(2)}`)}
                 {stat('Alcoholic Strength', `${wine.alcoholicStrength}%`)}
                 {stat('Bottle Volume', `${wine.bottleVolume} ml`)}
                 {stat('Contains Sulphites', wine.containsSulphites ? 'Yes' : 'No')}
@@ -57,7 +62,7 @@ export default function WineDetail({
             <div className="flex items-center gap-4">
                 <Link
                     href={`/edit/${wine.id}`}
-                    className="cursor-pointer rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover"
+                    className="cursor-pointer bg-primary px-4 py-[7px] text-sm text-white hover:bg-primary-hover active:bg-primary-active"
                 >
                     Edit Wine
                 </Link>
@@ -67,7 +72,7 @@ export default function WineDetail({
                             onDelete?.(wine.id)
                         }
                     }}
-                    className="cursor-pointer rounded-md bg-secondary px-4 py-2 text-ink hover:bg-secondary-hover"
+                    className="cursor-pointer bg-secondary px-4 py-[7px] text-sm text-ink hover:bg-secondary-hover active:bg-secondary-active"
                 >
                     Delete
                 </button>

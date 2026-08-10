@@ -1,4 +1,4 @@
-import type { Wine, WineStats, WineType, SortKey, SortDir } from "./types";
+import type { Wine, WineType, SortKey, SortDir } from "./types";
 import { SEED } from "./seed";
 
 // ---------------------------------------------------------------------------
@@ -42,31 +42,6 @@ export function loadWines(): Wine[] | null {
 export function saveWines(wines: Wine[]): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(wines));
-}
-
-// ---------------------------------------------------------------------------
-// STATS — pure & synchronous so the server seam (`getStats`) and the client
-// dashboard's useMemo always agree. cellarValue = Σ price × quantity (£).
-// ---------------------------------------------------------------------------
-export function computeStats(wines: Wine[]): WineStats {
-  const totalBottles = wines.reduce((sum, w) => sum + w.quantity, 0);
-  // Sets count unique countries/regions (eliminates duplicates).
-  const totalCountries = new Set(wines.map((w) => w.country)).size;
-  const totalRegions = new Set(wines.map((w) => w.region)).size;
-  const cellarValue = wines.reduce((sum, w) => sum + w.price * w.quantity, 0);
-  const readyToDrink = wines.filter((w) => w.readyToDrink).length;
-  return {
-    totalBottles,
-    totalCountries,
-    totalRegions,
-    cellarValue,
-    readyToDrink,
-  };
-}
-
-// Async wrapper kept for the server-side data seam (future DB/WordPress swap).
-export async function getStats(wines: Wine[] = SEED): Promise<WineStats> {
-  return computeStats(wines);
 }
 
 // ---------------------------------------------------------------------------

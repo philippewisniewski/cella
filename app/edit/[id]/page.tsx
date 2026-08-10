@@ -10,19 +10,21 @@ export default function EditWinePage({ params }: { params: Promise<{ id: string 
   const router = useRouter()
   const { id } = use(params)
 
-  // Synchronous lookup against the user's saved cellar (no effect needed).
-  const saved = loadWines()
-  const found = saved?.find((w) => w.id === id) ?? null
+  // The wine to edit, loaded after mount. We start null so the first client
+  // render matches the server (where localStorage is unavailable), avoiding a
+  // hydration mismatch; the effect below fills it in.
+  const [wine, setWine] = useState<Wine | null>(null)
 
-  // If not in the saved cellar, fall back to the seed (async) via state.
-  const [seedWine, setSeedWine] = useState<Wine | null>(null)
   useEffect(() => {
-    if (!found) {
-      getWineById(id).then(setSeedWine)
+    // Prefer the user's saved cellar; fall back to the seed if not present.
+    const saved = loadWines()
+    const found = saved?.find((w) => w.id === id) ?? null
+    if (found) {
+      setWine(found)
+    } else {
+      getWineById(id).then(setWine)
     }
-  }, [found, id])
-
-  const wine = found ?? seedWine
+  }, [id])
 
   // Save → replace by id in the localStorage-backed cellar, then return home.
   const handleSave = (updated: Wine) => {
@@ -32,8 +34,7 @@ export default function EditWinePage({ params }: { params: Promise<{ id: string 
   }
 
   if (wine === null) {
-    // Wine not found (e.g. bad id) — send the user back to the list.
-    router.push('/')
+    // Not loaded yet (or not found) — render nothing until the effect resolves.
     return null
   }
 

@@ -7,7 +7,7 @@ import type { SortKey, SortDir } from '@/lib/types'
 // column sorts by; `label` is what's displayed.
 const COLUMNS: { key: SortKey; label: string; className: string }[] = [
   { key: 'name', label: 'Name', className: 'flex-1 min-w-0 font-medium' },
-  { key: 'producer', label: 'Producer', className: 'w-40 truncate text-sm text-muted' },
+  { key: 'producer', label: 'Producer', className: 'w-40 truncate' },
   { key: 'type', label: 'Type', className: 'w-24' },
   { key: 'country', label: 'Country', className: 'w-28' },
   { key: 'year', label: 'Year', className: 'w-16' },
@@ -37,7 +37,7 @@ export default function ColumnHeader({
   }
 
   return (
-        <div className="flex items-center gap-4 border-t border-border bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
+        <div className="flex items-center gap-8 bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
       {COLUMNS.map((col) => {
         const active = col.key === sortKey
         return (
@@ -49,11 +49,12 @@ export default function ColumnHeader({
               active ? 'text-primary' : ''
             } ${col.className}`}
           >
-            <span className="truncate">{col.label}</span>
-            {/* Reserve a fixed slot for the arrow so the label never shifts
-                when a column becomes (in)active. */}
-            <span className="w-2 shrink-0" aria-hidden>
-              {active ? (sortDir === 'asc' ? '▲' : '▼') : ''}
+            <span className="truncate uppercase">{col.label}</span>
+            {/* Stacked up/down arrows; the active sort direction is highlighted
+                in the primary color, the inactive one is muted. */}
+            <span className="flex w-2 flex-col items-center text-[8px] leading-none" aria-hidden>
+              <span className={active && sortDir === 'asc' ? 'text-primary' : 'text-ink/30'}>▲</span>
+              <span className={active && sortDir === 'desc' ? 'text-primary' : 'text-ink/30'}>▼</span>
             </span>
           </button>
         )

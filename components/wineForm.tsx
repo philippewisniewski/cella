@@ -49,26 +49,63 @@ export default function WineForm({
         full = false,
     ) => (
         <div className={`flex flex-col gap-2 ${full ? 'w-full' : 'flex-1'}`}>
-            <label className="text-xs font-normal uppercase tracking-wide text-ink">
+            <label className="text-xs font-normal uppercase text-ink">
                 {label}
             </label>
             {control}
         </div>
     )
 
-    // Shared input styling: matches the design's input fill + padding.
+    // Shared input styling: matches the design's borderless input fill + padding.
     const inputCls =
-        'w-full rounded-md border border-border bg-input px-4 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary/30'
+        'w-full bg-input px-4 py-[7px] text-sm text-muted focus:outline-none focus:ring-2 focus:ring-primary/30'
+
+    // A radio group (Yes/No) used for boolean fields, matching the design's
+    // 12px circular radios with muted labels.
+    const radioGroup = (
+        name: string,
+        value: boolean,
+        onChange: (v: boolean) => void,
+        yesLabel: string,
+        noLabel: string,
+    ) => (
+        <div className="flex items-center gap-4">
+            <label className="flex items-center gap-1">
+                <input
+                    type="radio"
+                    name={name}
+                    checked={value}
+                    onChange={() => onChange(true)}
+                    className="h-3 w-3 accent-primary"
+                />
+                <span className="text-sm text-muted">{yesLabel}</span>
+            </label>
+            <label className="flex items-center gap-1">
+                <input
+                    type="radio"
+                    name={name}
+                    checked={!value}
+                    onChange={() => onChange(false)}
+                    className="h-3 w-3 accent-primary"
+                />
+                <span className="text-sm text-muted">{noLabel}</span>
+            </label>
+        </div>
+    )
 
     return (
-        <div className="mx-auto flex w-full max-w-[688px] flex-col gap-8 p-4">
-            <h2 className="font-display text-2xl">{wine ? 'Edit Wine' : 'Add Wine'}</h2>
+        <div className="flex gap-8 p-4">
+            <div className="flex-1">
+                <h2 className="font-display text-2xl font-semibold leading-[30px]">
+                    {wine ? 'Edit Wine' : 'Add Wine'}
+                </h2>
+            </div>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-1 flex-col gap-8">
                 {/* Row 1 */}
                 <div className="flex gap-5">
                     {field(
-                        'Name',
+                        'Wine Name',
                         <input
                             className={inputCls}
                             value={form.name}
@@ -90,7 +127,7 @@ export default function WineForm({
                     {field(
                         'Type',
                         <select
-                            className={inputCls}
+                            className={`${inputCls} appearance-none`}
                             value={form.type}
                             onChange={(e) => set('type', e.target.value as WineType)}
                         >
@@ -147,7 +184,7 @@ export default function WineForm({
                         />,
                     )}
                     {field(
-                        'Price',
+                        'Value (£)',
                         <input
                             type="number"
                             className={inputCls}
@@ -171,7 +208,7 @@ export default function WineForm({
                         />,
                     )}
                     {field(
-                        'Bottle Volume (ml)',
+                        'Bottle Volume',
                         <input
                             type="number"
                             className={inputCls}
@@ -204,7 +241,7 @@ export default function WineForm({
                 {/* Row 7 */}
                 <div className="flex gap-5">
                     {field(
-                        'Score',
+                        'Score (Out of 100)',
                         <input
                             type="number"
                             className={inputCls}
@@ -213,13 +250,14 @@ export default function WineForm({
                         />,
                     )}
                     {field(
-                        'Contains Sulphites',
-                        <input
-                            type="checkbox"
-                            className="mt-2 h-4 w-4 accent-primary"
-                            checked={form.containsSulphites}
-                            onChange={(e) => set('containsSulphites', e.target.checked)}
-                        />,
+                        'Contains Sulphites?',
+                        radioGroup(
+                            'containsSulphites',
+                            form.containsSulphites,
+                            (v) => set('containsSulphites', v),
+                            'Yes',
+                            'No',
+                        ),
                     )}
                 </div>
 
@@ -234,13 +272,14 @@ export default function WineForm({
                         />,
                     )}
                     {field(
-                        'Ready to Drink',
-                        <input
-                            type="checkbox"
-                            className="mt-2 h-4 w-4 accent-primary"
-                            checked={form.readyToDrink}
-                            onChange={(e) => set('readyToDrink', e.target.checked)}
-                        />,
+                        'Ready to Drink?',
+                        radioGroup(
+                            'readyToDrink',
+                            form.readyToDrink,
+                            (v) => set('readyToDrink', v),
+                            'Ready to drink',
+                            'Not ready for drinking',
+                        ),
                     )}
                 </div>
 
@@ -248,8 +287,7 @@ export default function WineForm({
                 {field(
                     'Description',
                     <textarea
-                        className={inputCls}
-                        rows={4}
+                        className={`${inputCls} h-[152px]`}
                         value={form.description}
                         onChange={(e) => set('description', e.target.value)}
                     />,
@@ -258,30 +296,28 @@ export default function WineForm({
                 {field(
                     'Tasting Notes',
                     <textarea
-                        className={inputCls}
-                        rows={4}
+                        className={`${inputCls} h-[152px]`}
                         value={form.tastingNotes}
                         onChange={(e) => set('tastingNotes', e.target.value)}
                     />,
                     true,
                 )}
-            </div>
-
             <div className="flex items-center gap-4">
                 <button
                     type="button"
                     onClick={() => onSave(form)}
-                    className="cursor-pointer rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover"
+                    className="cursor-pointer bg-primary px-4 py-[7px] text-sm text-white hover:bg-primary-hover active:bg-primary-active"
                 >
                     Save
                 </button>
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="cursor-pointer rounded-md bg-secondary px-4 py-2 text-ink hover:bg-secondary-hover"
+                    className="cursor-pointer bg-secondary px-4 py-[7px] text-sm text-ink hover:bg-secondary-hover active:bg-secondary-active"
                 >
                     Cancel
                 </button>
+            </div>
             </div>
         </div>
     )

@@ -19,7 +19,7 @@ export default function Header({
     onSortChange: (key: SortKey, dir: SortDir) => void
 }) {
     return (
-        <header className="sticky top-0 z-10 bg-canvas">
+        <header className="sticky top-0 z-10 border-b border-border bg-canvas">
             {/* Top row: search (left) + Add Wine button */}
             <div className="flex items-center justify-between gap-4 p-4">
                 <div className="w-[324px]">
@@ -27,7 +27,7 @@ export default function Header({
                 </div>
                 <Link
                     href="/add"
-                    className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary-hover"
+                    className="bg-primary px-4 py-[7px] text-sm text-white hover:bg-primary-hover active:bg-primary-active"
                 >
                     + Add Wine
                 </Link>

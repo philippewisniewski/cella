@@ -28,14 +28,6 @@ export interface Wine {
   readyToDrink: boolean;
 }
 
-export interface WineStats {
-  totalBottles: number;
-  totalCountries: number;
-  totalRegions: number;
-  cellarValue: number; // GBP = Σ price × quantity
-  readyToDrink: number;
-}
-
 export type SortKey =
   | "name"
   | "producer"
