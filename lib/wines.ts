@@ -23,7 +23,9 @@ export async function getWineById(id: string): Promise<Wine | null> {
 // we load/save the user's actual cellar here. Guarded by `typeof window` so
 // this module is safe to import during SSR, where localStorage doesn't exist.
 // ---------------------------------------------------------------------------
-const STORAGE_KEY = "cella.wines.v1";
+// Bumped to v2 when the seed cellar was replaced — old v1 cellars in
+// browsers are ignored so the new seed always shows on first load.
+const STORAGE_KEY = "cella.wines.v2";
 
 // Read the saved cellar. Returns null if nothing is stored yet, or if we're on
 // the server (no localStorage). The caller decides what to do with null.

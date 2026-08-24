@@ -28,15 +28,20 @@ export default function WineList({
 }) {
     return (
         <div>
-            {/* One clickable row per wine. Three responsive tiers:
+            {/* One selectable row per wine. Each row is a real <button> so
+                keyboard users can tab through the cellar and press Enter to
+                open a wine (screen readers announce them as buttons).
+                Three responsive tiers inside:
                 - >= lg (1024px): horizontal table row
                 - sm..lg (640-1023px): tablet layout (name row + wrapping data)
                 - < sm (639px): fully-stacked card */}
             {wines.map((wine) => (
-                <div
+                <button
                     key={wine.id}
+                    type="button"
                     onClick={() => onSelect(wine)}
-                    className="cursor-pointer"
+                    className="block w-full cursor-pointer text-left focus-visible:ring-2 focus-visible:ring-ink/50 focus-visible:outline-none"
+                    aria-label={`View ${wine.name} ${wine.year}, ${wine.producer}`}
                 >
                     <div className="hidden lg:block">
                         <WineCard wine={wine} />
@@ -47,7 +52,7 @@ export default function WineList({
                     <div className="sm:hidden">
                         <WineCardResponsive wine={wine} />
                     </div>
-                </div>
+                </button>
             ))}
         </div>
     )

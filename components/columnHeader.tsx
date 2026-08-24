@@ -6,14 +6,14 @@ import type { SortKey, SortDir } from '@/lib/types'
 // WineCard rows exactly so the two stay aligned. `key` is the SortKey this
 // column sorts by; `label` is what's displayed.
 const COLUMNS: { key: SortKey; label: string; className: string }[] = [
-  { key: 'name', label: 'Name', className: 'flex-1 min-w-0 font-medium' },
-  { key: 'producer', label: 'Producer', className: 'w-40 truncate' },
+  { key: 'name', label: 'Name', className: 'flex-1 min-w-72 font-medium tracking-wide' },
+  { key: 'producer', label: 'Producer', className: 'w-44 truncate' },
   { key: 'type', label: 'Type', className: 'w-24' },
-  { key: 'country', label: 'Country', className: 'w-28' },
+  { key: 'country', label: 'Country', className: 'w-32' },
   { key: 'year', label: 'Year', className: 'w-16' },
   { key: 'score', label: 'Score', className: 'w-16' },
   { key: 'readyToDrink', label: 'Ready', className: 'w-40' },
-  { key: 'price', label: 'Price', className: 'w-20' },
+  { key: 'price', label: 'Price', className: 'w-24' },
   { key: 'quantity', label: 'Qty', className: 'w-12' },
 ]
 
@@ -37,7 +37,7 @@ export default function ColumnHeader({
   }
 
   return (
-        <div className="hidden lg:flex items-center gap-4 bg-canvas px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink">
+        <div className="hidden lg:flex items-center gap-6 bg-canvas px-6 py-3.5 text-xs font-semibold uppercase tracking-widest text-ink">
       {COLUMNS.map((col) => {
         const active = col.key === sortKey
         return (

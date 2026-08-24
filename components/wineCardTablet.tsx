@@ -11,9 +11,9 @@ import { TYPE_BADGE, BADGE } from './badges'
  */
 export function WineCardTablet({ wine }: { wine: Wine }) {
     return (
-        <div className="flex flex-col gap-2 px-4 py-3 border-b border-border">
+        <div className="flex flex-col gap-2 px-5 py-3.5 border-b border-border hover:bg-ink/5 transition-colors duration-150">
             {/* Row 1: wine name spans the full width. */}
-            <span className="font-display text-base font-semibold text-ink truncate">
+            <span className="font-display text-base font-semibold tracking-wide text-ink truncate">
                 {wine.name}
             </span>
 

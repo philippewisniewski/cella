@@ -17,10 +17,10 @@ const statLine = (label: string, value: string) => (
  */
 export function WineCardResponsive({ wine }: { wine: Wine }) {
     return (
-        <div className="flex flex-col gap-2 px-4 py-3 border-b border-border">
+        <div className="flex flex-col gap-2 px-5 py-3.5 border-b border-border transition-colors duration-150">
             {/* Name + producer */}
             <div className="flex flex-col gap-1">
-                <span className="font-display text-base font-semibold text-ink">
+                <span className="font-display text-base font-semibold tracking-wide text-ink">
                     {wine.name}
                 </span>
                 <span className="text-sm text-muted">{wine.producer}</span>

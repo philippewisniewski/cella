@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Wine } from '@/lib/types'
 import WineDetail from './wineDetail'
 
@@ -31,6 +31,17 @@ export default function Aside({
     if (selected && selected !== shown) {
         setShown(selected)
     }
+
+    // Close the flyout with the Escape key — standard dialog behaviour so
+    // keyboard users aren't trapped after opening a wine.
+    useEffect(() => {
+        if (!open) return
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose?.()
+        }
+        window.addEventListener('keydown', handleKey)
+        return () => window.removeEventListener('keydown', handleKey)
+    }, [open, onClose])
 
     return (
         <>
